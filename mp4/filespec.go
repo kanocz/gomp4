@@ -43,7 +43,7 @@ func init() {
 		"moov": moovRead,
 		"mdat": mdatRead,
 		"moof": moofRead,
-		//"mfra": mfraRead,
+		"mfra": mfraRead,
 	}
 	mp4MoovAtoms = map[string]ParseAtomFuc{
 		"mvhd": mvhdRead,
