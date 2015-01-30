@@ -23,28 +23,31 @@ import (
 
 type MdatAtom struct {
 	Offset int64
-	Size int64
+	Size   int64
 }
 
 func mdatRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
 	//log.Println("mdatRead")
-	fs.MdatAtomInstance.Offset = offset
-	var err error	
+	var NewMdatAtomInstance MdatAtom
+	NewMdatAtomInstance.Offset = offset
+	var err error
 
 	err = fp.Mp4Seek(offset, 0)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
+
 	size, _, err := fp.Mp4ReadHeader()
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
-	sizeInt := util.Bytes2Int(size)	
-	fs.MdatAtomInstance.Size = sizeInt
-	
+
+	sizeInt := util.Bytes2Int(size)
+	NewMdatAtomInstance.Size = sizeInt
+
+	fs.MdatAtomInstance = append(fs.MdatAtomInstance, NewMdatAtomInstance)
+
 	return nil
 }

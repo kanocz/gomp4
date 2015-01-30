@@ -16,9 +16,9 @@
 package mp4
 
 import (
-	"log"
-	//"errors"
-	"github.com/oikomi/gomp4/util"
+//"log"
+//"errors"
+//"github.com/oikomi/gomp4/util"
 )
 
 type MfhdAtom struct {
@@ -32,5 +32,5 @@ type MfhdAtom struct {
 }
 
 func mfhdRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
-
+	return nil
 }

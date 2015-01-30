@@ -43,7 +43,7 @@ func init() {
 		"moov": moovRead,
 		"mdat": mdatRead,
 		"moof": moofRead,
-		"mfra": mfraRead
+		//"mfra": mfraRead,
 	}
 	mp4MoovAtoms = map[string]ParseAtomFuc{
 		"mvhd": mvhdRead,
@@ -73,19 +73,19 @@ func init() {
 		"stco": stcoRead,
 		"ctts": cttsRead,
 	}
-	mp4MoofAtoms = map[string]ParseAtomFuc{
+	/*mp4MoofAtoms = map[string]ParseAtomFuc{
 		"mfhd": mfhdRead,
-		"traf": trafRead
+		"traf": trafRead,
 	}
 	mp4TrafAtoms = map[string]ParseAtomFuc{
 		"tfhd": tfhdRead,
 		"tfdt": tfdtRead,
-		"trun": trunRead
+		"trun": trunRead,
 	}
 	mp4MfraAtoms = map[string]ParseAtomFuc{
 		"tfra": tfraRead,
-		"mfro": mfroRead
-	}
+		"mfro": mfroRead,
+	}*/
 }
 
 type Mp4FileSpec struct {
@@ -93,7 +93,9 @@ type Mp4FileSpec struct {
 	TotalSize        int64
 	FtypAtomInstance FtypAtom
 	MoovAtomInstance MoovAtom
-	MdatAtomInstance MdatAtom
+	MdatAtomInstance []MdatAtom
+	MoofAtomInstance []MoofAtom
+	MfraAtomInstance MfraAtom
 }
 
 func NewMp4FileSpec(name string) *Mp4FileSpec {

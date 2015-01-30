@@ -16,9 +16,9 @@
 package mp4
 
 import (
-	"log"
-	//"errors"
-	"github.com/oikomi/gomp4/util"
+//"log"
+//"errors"
+//"github.com/oikomi/gomp4/util"
 )
 
 type TfdtAtom struct {
@@ -41,6 +41,6 @@ type TfdtAtom struct {
       @base_media_decode_time = stream.si32
 */
 
-func TfdtRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
-
+func tfdtRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
+	return nil
 }

@@ -16,9 +16,9 @@
 package mp4
 
 import (
-	"log"
-	//"errors"
-	"github.com/oikomi/gomp4/util"
+//"log"
+//"errors"
+//"github.com/oikomi/gomp4/util"
 )
 
 type MfroAtom struct {
@@ -35,6 +35,6 @@ type MfroAtom struct {
  @version,@flags,@mfra_size = stream.ui8, stream.ui24, stream.ui32
 */
 
-func MfroRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
-
+func mfroRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
+	return nil
 }

@@ -16,9 +16,9 @@
 package mp4
 
 import (
-	"log"
-	//"errors"
-	"github.com/oikomi/gomp4/util"
+//"log"
+//"errors"
+//"github.com/oikomi/gomp4/util"
 )
 
 type TfraAtom struct {
@@ -55,6 +55,6 @@ type TfraAtom struct {
     end
 */
 
-func TfraRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
-
+func tfraRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
+	return nil
 }

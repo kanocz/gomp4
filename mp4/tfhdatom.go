@@ -16,9 +16,9 @@
 package mp4
 
 import (
-	"log"
-	//"errors"
-	"github.com/oikomi/gomp4/util"
+//"log"
+//"errors"
+//"github.com/oikomi/gomp4/util"
 )
 
 type TfhdAtom struct {
@@ -54,6 +54,6 @@ version = stream.ui8
     @default_sample_flags = stream.ui32 if @default_sample_flags_present > 0
 */
 
-func TfhdRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
-
+func tfhdRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
+	return nil
 }
