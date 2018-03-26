@@ -16,10 +16,11 @@
 package main
 
 import (
-	"os"
-	"log"
 	"encoding/json"
 	"fmt"
+	"log"
+	"os"
+
 	"github.com/kanocz/gomp4/mp4"
 )
 
@@ -52,28 +53,28 @@ func version() {
 func main() {
 	version()
 	fmt.Printf("built on %s\n", BuildTime())
-	
+
 	if len(os.Args) != 2 {
 		os.Exit(0)
 	}
-	
+
 	fs := mp4.NewMp4FileSpec(os.Args[1])
 	fp := mp4.NewMp4FilePro()
-	
+
 	err := fp.Mp4Open(fs)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return
 	}
-	
+
 	err = fp.Mp4FileStat(fs)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return
 	}
-		
+
 	fs.ParseAtoms(fp)
-	res, err := json.Marshal(fs)
+	res, err := json.MarshalIndent(fs, "", "  ")
 	if err != nil {
 		log.Fatalln(err.Error())
 		return
