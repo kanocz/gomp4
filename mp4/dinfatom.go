@@ -22,11 +22,11 @@ import (
 )
 
 type DinfAtom struct {
-	Offset int64
-	Size int64
+	Offset    int64
+	Size      int64
 	IsFullBox bool
 
-	AllBytes []byte
+	AllBytes []byte `json:"-"`
 }
 
 func dinfRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
@@ -40,32 +40,32 @@ func dinfRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
+
 	size, _, err := fp.Mp4ReadHeader()
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
-	sizeInt := util.Bytes2Int(size)	
+
+	sizeInt := util.Bytes2Int(size)
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MinfAtomInstance.
 		DinfAtomInstance.Size = sizeInt
-		
+
 	err = fp.Mp4Seek(offset, 0)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
+
 	buf, err := fp.Mp4Read(fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MinfAtomInstance.
 		DinfAtomInstance.Size)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
+
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MinfAtomInstance.
 		DinfAtomInstance.AllBytes = buf
-			
+
 	return nil
 }

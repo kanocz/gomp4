@@ -22,16 +22,16 @@ import (
 )
 
 type StszAtom struct {
-	Offset int64
-	Size int64
-	IsFullBox bool
-	Version uint8
-	Flag uint32
-	SampleSize uint32
-	EntriesNum uint32
-	SampleSizeTable []uint32
+	Offset          int64
+	Size            int64
+	IsFullBox       bool
+	Version         uint8
+	Flag            uint32
+	SampleSize      uint32
+	EntriesNum      uint32
+	SampleSizeTable []uint32 `json:"-"`
 
-	AllBytes []byte
+	AllBytes []byte `json:"-"`
 }
 
 func stszRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
@@ -45,39 +45,39 @@ func stszRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
+
 	size, _, err := fp.Mp4ReadHeader()
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
-	sizeInt := util.Bytes2Int(size)	
+
+	sizeInt := util.Bytes2Int(size)
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MinfAtomInstance.
 		StblAtomInstance.StszAtomInstance.Size = sizeInt
-		
+
 	err = fp.Mp4Seek(offset, 0)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
+
 	buf, err := fp.Mp4Read(fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MinfAtomInstance.
 		StblAtomInstance.StszAtomInstance.Size)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
+
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MinfAtomInstance.
 		StblAtomInstance.StszAtomInstance.AllBytes = buf
 
-	err = fp.Mp4Seek(offset + 8, 0)
+	err = fp.Mp4Seek(offset+8, 0)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
-	}	
-			
+	}
+
 	size, err = fp.Mp4Read(1)
 	if err != nil {
 		log.Fatalln(err.Error())
@@ -85,14 +85,14 @@ func stszRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
 	}
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MinfAtomInstance.
 		StblAtomInstance.StszAtomInstance.Version = uint8(size[0])
-	
+
 	size, err = fp.Mp4Read(3)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MinfAtomInstance.
-		StblAtomInstance.StszAtomInstance.Flag = util.Byte32Uint32(size, 0)	
+		StblAtomInstance.StszAtomInstance.Flag = util.Byte32Uint32(size, 0)
 
 	size, err = fp.Mp4Read(4)
 	if err != nil {
@@ -101,7 +101,7 @@ func stszRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
 	}
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MinfAtomInstance.
 		StblAtomInstance.StszAtomInstance.SampleSize = util.Byte42Uint32(size, 0)
-		
+
 	size, err = fp.Mp4Read(4)
 	if err != nil {
 		log.Fatalln(err.Error())
@@ -109,24 +109,23 @@ func stszRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
 	}
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MinfAtomInstance.
 		StblAtomInstance.StszAtomInstance.EntriesNum = util.Byte42Uint32(size, 0)
-		
+
 	var i uint32
 	for i = 0; i < fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MinfAtomInstance.
-		StblAtomInstance.StszAtomInstance.EntriesNum; i++ {	
-		
+		StblAtomInstance.StszAtomInstance.EntriesNum; i++ {
+
 		buf, err := fp.Mp4Read(4)
 		if err != nil {
 			log.Fatalln(err.Error())
 			return err
 		}
-		
+
 		fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MinfAtomInstance.
 			StblAtomInstance.StszAtomInstance.SampleSizeTable = append(fs.MoovAtomInstance.
 			TrakAtomInstance[trakNum].MdiaAtomInstance.MinfAtomInstance.StblAtomInstance.
 			StszAtomInstance.SampleSizeTable, util.Byte42Uint32(buf, 0))
 	}
-		
-		
+
 	return nil
-	
+
 }

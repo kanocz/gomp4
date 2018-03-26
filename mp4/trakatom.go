@@ -28,7 +28,7 @@ type TrakAtom struct {
 	IsFullBox        bool
 	TkhdAtomInstance TkhdAtom
 	MdiaAtomInstance MdiaAtom
-	AllBytes         []byte
+	AllBytes         []byte `json:"-"`
 }
 
 func trakRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {

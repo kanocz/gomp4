@@ -22,14 +22,14 @@ import (
 )
 
 type SmhdAtom struct {
-	Offset int64
-	Size int64
+	Offset    int64
+	Size      int64
 	IsFullBox bool
-	
-	Version uint8
-	Flag uint32
 
-	AllBytes []byte
+	Version uint8
+	Flag    uint32
+
+	AllBytes []byte `json:"-"`
 }
 
 func smhdRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
@@ -43,40 +43,39 @@ func smhdRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
+
 	size, _, err := fp.Mp4ReadHeader()
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
-	sizeInt := util.Bytes2Int(size)	
+
+	sizeInt := util.Bytes2Int(size)
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MinfAtomInstance.
 		SmhdAtomInstance.Size = sizeInt
-		
-		
+
 	err = fp.Mp4Seek(offset, 0)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
+
 	buf, err := fp.Mp4Read(fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.
 		MinfAtomInstance.SmhdAtomInstance.Size)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
+
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MinfAtomInstance.
 		SmhdAtomInstance.AllBytes = buf
 
-	err = fp.Mp4Seek(offset + 8, 0)
+	err = fp.Mp4Seek(offset+8, 0)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
-	}	
-			
+	}
+
 	size, err = fp.Mp4Read(1)
 	if err != nil {
 		log.Fatalln(err.Error())
@@ -84,7 +83,7 @@ func smhdRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
 	}
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MinfAtomInstance.
 		SmhdAtomInstance.Version = uint8(size[0])
-	
+
 	size, err = fp.Mp4Read(3)
 	if err != nil {
 		log.Fatalln(err.Error())
@@ -92,6 +91,6 @@ func smhdRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
 	}
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MinfAtomInstance.
 		SmhdAtomInstance.Flag = util.Byte32Uint32(size, 0)
-		
+
 	return nil
 }

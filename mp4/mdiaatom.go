@@ -22,13 +22,13 @@ import (
 )
 
 type MdiaAtom struct {
-	Offset int64
-	Size int64
-	IsFullBox bool
+	Offset           int64
+	Size             int64
+	IsFullBox        bool
 	MdhdAtomInstance MdhdAtom
 	HdlrAtomInstance HdlrAtom
 	MinfAtomInstance MinfAtom
-	AllBytes []byte
+	AllBytes         []byte `json:"-"`
 }
 
 func mdiaRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
@@ -40,68 +40,67 @@ func mdiaRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
+
 	size, _, err := fp.Mp4ReadHeader()
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
-	sizeInt := util.Bytes2Int(size)	
+
+	sizeInt := util.Bytes2Int(size)
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.Size = sizeInt
-	
+
 	err = fp.Mp4Seek(offset, 0)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
+
 	buf, err := fp.Mp4Read(8)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
+
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.AllBytes = buf
-	
+
 	var pos int64
-	
-	err = fp.Mp4Seek(8 + offset, 0)
+
+	err = fp.Mp4Seek(8+offset, 0)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
+
 	for fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.Size > pos {
 		size, atom, err := fp.Mp4ReadHeader()
-		
+
 		//log.Println(size, string(atom))
-		
+
 		if err != nil {
 			log.Fatalln(err.Error())
 			return err
 		}
-		
-		sizeInt := util.Bytes2Int(size)	
+
+		sizeInt := util.Bytes2Int(size)
 
 		pos += sizeInt
-	
+
 		if f, ok := mp4MdiaAtoms[string(atom)]; ok {
-			err = f(fs, fp, pos + 8 + offset - sizeInt)
-			
+			err = f(fs, fp, pos+8+offset-sizeInt)
+
 			//if string(atom) == "trak" {
 			//	trakNum ++
 			//}
-			
+
 			if err != nil {
 				log.Fatalln(err.Error())
-				return err	
+				return err
 			}
 		}
-		
-		fs.nextAtom(pos + 8 + offset, fp)
+
+		fs.nextAtom(pos+8+offset, fp)
 	}
-	
-	
+
 	return nil
 }

@@ -21,20 +21,19 @@ import (
 	"github.com/kanocz/gomp4/util"
 )
 
-
 type MdhdAtom struct {
-	Offset int64
-	Size int64
-	IsFullBox bool
-	Version uint8
-	Flag uint32
-	CreationTime uint32
+	Offset           int64
+	Size             int64
+	IsFullBox        bool
+	Version          uint8
+	Flag             uint32
+	CreationTime     uint32
 	ModificationTime uint32
-	Timescale uint32
-	Duration uint32
-	Language uint16
+	Timescale        uint32
+	Duration         uint32
+	Language         uint16
 	//Quality uint32
-	AllBytes []byte
+	AllBytes []byte `json:"-"`
 }
 
 func mdhdRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
@@ -48,39 +47,39 @@ func mdhdRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
+
 	size, _, err := fp.Mp4ReadHeader()
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
-	sizeInt := util.Bytes2Int(size)	
+
+	sizeInt := util.Bytes2Int(size)
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MdhdAtomInstance.
 		Size = sizeInt
-	
+
 	err = fp.Mp4Seek(offset, 0)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
+
 	buf, err := fp.Mp4Read(fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.
 		MdhdAtomInstance.Size)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
 	}
-	
+
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MdhdAtomInstance.
 		AllBytes = buf
 
-	err = fp.Mp4Seek(offset + 8, 0)
+	err = fp.Mp4Seek(offset+8, 0)
 	if err != nil {
 		log.Fatalln(err.Error())
 		return err
-	}	
-			
+	}
+
 	size, err = fp.Mp4Read(1)
 	if err != nil {
 		log.Fatalln(err.Error())
@@ -88,7 +87,7 @@ func mdhdRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
 	}
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MdhdAtomInstance.
 		Version = uint8(size[0])
-	
+
 	size, err = fp.Mp4Read(3)
 	if err != nil {
 		log.Fatalln(err.Error())
@@ -96,7 +95,7 @@ func mdhdRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
 	}
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MdhdAtomInstance.
 		Flag = util.Byte32Uint32(size, 0)
-	
+
 	size, err = fp.Mp4Read(4)
 	if err != nil {
 		log.Fatalln(err.Error())
@@ -104,7 +103,7 @@ func mdhdRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
 	}
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MdhdAtomInstance.
 		CreationTime = util.Byte42Uint32(size, 0)
-	
+
 	size, err = fp.Mp4Read(4)
 	if err != nil {
 		log.Fatalln(err.Error())
@@ -112,7 +111,7 @@ func mdhdRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
 	}
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MdhdAtomInstance.
 		ModificationTime = util.Byte42Uint32(size, 0)
-	
+
 	size, err = fp.Mp4Read(4)
 	if err != nil {
 		log.Fatalln(err.Error())
@@ -128,7 +127,7 @@ func mdhdRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
 	}
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MdhdAtomInstance.
 		Duration = util.Byte42Uint32(size, 0)
-	
+
 	size, err = fp.Mp4Read(2)
 	if err != nil {
 		log.Fatalln(err.Error())
@@ -136,16 +135,16 @@ func mdhdRead(fs *Mp4FileSpec, fp *Mp4FilePro, offset int64) error {
 	}
 	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MdhdAtomInstance.
 		Language = util.Byte22Uint16(size, 0)
-	
+
 	/*
-	size, err = fp.Mp4Read(2)
-	if err != nil {
-		log.Fatalln(err.Error())
-		return err
-	}
-	fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MdhdAtomInstance.
-		Quality = util.Bytes2Int(size)
+		size, err = fp.Mp4Read(2)
+		if err != nil {
+			log.Fatalln(err.Error())
+			return err
+		}
+		fs.MoovAtomInstance.TrakAtomInstance[trakNum].MdiaAtomInstance.MdhdAtomInstance.
+			Quality = util.Bytes2Int(size)
 	*/
-	
+
 	return nil
 }
