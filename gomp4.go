@@ -51,8 +51,8 @@ func version() {
 }
 
 func main() {
-	version()
-	fmt.Printf("built on %s\n", BuildTime())
+	// version()
+	// fmt.Printf("built on %s\n", BuildTime())
 
 	if len(os.Args) != 2 {
 		os.Exit(0)
