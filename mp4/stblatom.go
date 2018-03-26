@@ -18,7 +18,7 @@ package mp4
 import (
 	"log"
 	//"errors"
-	"github.com/oikomi/gomp4/util"
+	"github.com/kanocz/gomp4/util"
 )
 
 type StblAtom struct {

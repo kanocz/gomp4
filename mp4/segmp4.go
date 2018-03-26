@@ -18,7 +18,7 @@ package mp4
 import (
 	"log"
 	"os"
-	"github.com/oikomi/gomp4/util"
+	"github.com/kanocz/gomp4/util"
 )
 
 type SegStblAtom struct {
